@@ -6,7 +6,7 @@ if [ -d "/runpod-volume" ]; then
   rm -rf /workspace && ln -s /runpod-volume /workspace
   source /workspace/venv/bin/activate
   echo "venv info:"
-  echo $VIRTUAL_ENV && python -V && which python && which pip
+  echo $VIRTUAL_ENV && python -V && which python && which pip && pip list
   # Use libtcmalloc for better memory management
   TCMALLOC="$(ldconfig -p | grep -Po "libtcmalloc.so.\d" | head -n 1)"
   export LD_PRELOAD="${TCMALLOC}"
