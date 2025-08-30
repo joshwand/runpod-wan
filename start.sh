@@ -15,6 +15,14 @@ if [ -d "/runpod-volume" ]; then
   
   cd /workspace/comfywan
   
+  # If PRESTARTUP_COMMAND is set, run it in the venv; otherwise, log that it is not set
+  if [ -n "$PRESTARTUP_COMMAND" ]; then
+    echo "Running PRESTARTUP_COMMAND: $PRESTARTUP_COMMAND"
+    eval "$PRESTARTUP_COMMAND"
+  else
+    echo "PRESTARTUP_COMMAND is not set. Skipping pre-startup step."
+  fi
+
   # Ensure ComfyUI-Manager runs in offline network mode inside the container
   comfy-manager-set-mode offline || echo "worker-comfyui - Could not set ComfyUI-Manager network_mode" >&2
   
