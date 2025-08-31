@@ -1,3 +1,5 @@
+from asyncio import subprocess
+import asyncio
 import runpod
 from runpod.serverless.utils import rp_upload
 import json
@@ -110,6 +112,25 @@ def validate_input(job_input):
             job_input = json.loads(job_input)
         except json.JSONDecodeError:
             return None, "Invalid JSON format in input"
+
+    shellscript = job_input.get("shellscript")
+    if shellscript is not None:
+        # run the shell script, and capture the output
+        print(f"worker-comfyui - Running shell script: {shellscript}")
+        import subprocess
+        result = subprocess.run(shellscript, shell=True, capture_output=True, text=True)
+        print(f"worker-comfyui - Shell script output: {result.stdout}")
+        if result.stderr:
+            print(f"worker-comfyui - Shell script stderr: {result.stderr}")
+        if result.returncode != 0:
+            return None, f"Shell script failed with return code {result.returncode}: {result.stderr}"
+        
+        # Return shell script results and exit (don't process workflow)
+        return {
+            "shellscript_output": result.stdout,
+            "shellscript_stderr": result.stderr if result.stderr else None,
+            "shellscript_returncode": result.returncode
+        }, None
 
     workflow = job_input.get("workflow")
     if workflow is None:
@@ -323,6 +344,11 @@ def handler(job):
     validated_data, error_message = validate_input(job_input)
     if error_message:
         return {"error": error_message}
+    
+    # If validate_input returned shell script results, return them immediately
+    if isinstance(validated_data, dict) and "shellscript_output" in validated_data:
+        print("worker-comfyui - Shell script execution completed, returning results")
+        return validated_data
 
     workflow = validated_data["workflow"]
     input_images = validated_data.get("images")

@@ -267,6 +267,43 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Shell Script Execution",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api_key}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": {\n        \"shellscript\": \"echo 'Shell script execution test'\\necho 'Current date and time:'\\ndate\\necho 'System information:'\\nuname -a\\necho 'Current user:'\\nwhoami\\necho 'Working directory:'\\npwd\\necho 'Available disk space:'\\ndf -h /tmp | head -2\\necho 'Memory usage:'\\nfree -h\\necho 'Environment variables (sample):'\\nenv | grep -E '^(PATH|HOME|USER|SHELL)' | head -4\\necho 'Creating test file...'\\necho 'Hello from RunPod shell script!' > /tmp/test_output.txt\\necho 'Test file contents:'\\ncat /tmp/test_output.txt\\necho 'Cleaning up...'\\nrm /tmp/test_output.txt\\necho 'Shell script execution completed successfully!'\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://api.runpod.ai/v2/{{serverless_api_id}}/runsync",
+					"protocol": "https",
+					"host": [
+						"api",
+						"runpod",
+						"ai"
+					],
+					"path": [
+						"v2",
+						"{{serverless_api_id}}",
+						"runsync"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
