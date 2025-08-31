@@ -3,7 +3,7 @@
 1. [Create a RunPod Account](https://runpod.io).
 2. Create a [RunPod Network Volume](https://www.runpod.io/console/user/storage).
 3. Attach the Network Volume to a Secure Cloud [GPU pod](https://www.runpod.io/console/gpu-secure-cloud).
-4. Select the RunPod Pytorch 2 template.
+4. Select the RunPod Pytorch 2 template. WITH PYTHON 3.10!
 5. Deploy the GPU Cloud pod.
 6. Once the pod is up, open a Terminal and install the required dependencies.
 
@@ -66,18 +66,20 @@ python setup.py install  # or pip install -e .
 ```
 3. Download models:
 ```bash
+
+mkdir -p /workspace/models/unet 
 # WAN2.2 I2V Q5_M
-aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_i2v_high_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_high_noise_14B_Q5_K_M.gguf
-aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_i2v_low_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_low_noise_14B_Q5_K_M.gguf
+aria2c -x16 -s16 -d /workspace/models/unet -o wan2.2_i2v_high_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_high_noise_14B_Q5_K_M.gguf
+aria2c -x16 -s16 -d /workspace/models/unet -o wan2.2_i2v_low_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-I2V-A14B-GGUF/resolve/main/wan2.2_i2v_low_noise_14B_Q5_K_M.gguf
 
 # WAN2.2 T2V Q5_M
-aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_t2v_high_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_high_noise_14B_Q5_K_M.gguf
-aria2c -x16 -s16 -d /workspace/models/diffusion_models -o wan2.2_t2v_low_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_low_noise_14B_Q5_K_M.gguf
+aria2c -x16 -s16 -d /workspace/models/unet -o wan2.2_t2v_high_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_high_noise_14B_Q5_K_M.gguf
+aria2c -x16 -s16 -d /workspace/models/unet -o wan2.2_t2v_low_noise_14B_Q5_K_M.gguf --continue=true https://huggingface.co/bullerwins/Wan2.2-T2V-A14B-GGUF/resolve/main/wan2.2_t2v_low_noise_14B_Q5_K_M.gguf
 
 # Download text encoders also GGUF
 aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5-xxl-encoder-Q8_0.gguf --continue=true https://huggingface.co/city96/umt5-xxl-encoder-gguf/resolve/main/umt5-xxl-encoder-Q8_0.gguf
 
-aria2c -x16 -s16 -d /workspace/models/text_encoders -o umt5_xxl_fp8_e4m3fn_scaled.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors
+aria2c -x16 -s16 -d /workspace/models/clip_vision -o umt5_xxl_fp8_e4m3fn_scaled.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors
 
 # Create CLIP vision directory and download models
 aria2c -x16 -s16 -d /workspace/models/clip_vision -o clip_vision_h.safetensors --continue=true https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors
